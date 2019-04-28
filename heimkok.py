@@ -3,7 +3,7 @@
 # TODO: Add Wunderlist functionality
 # TODO: Add imagescraper functionality
 
-import discord, requests, random, sys
+import discord, requests, random, sys, json
 from discord.ext import commands
 
 bot = commands.Bot(command_prefix='!', description='Heimkok is a simple bot for simple stuff')
@@ -34,7 +34,7 @@ class AnimalStorage:
             'url': 'https://randomfox.ca/floof/',
             'file': 'image'
         },
-    }
+        }
 
     # Returns either a cat, a shibe, or a fox.
     def fetch_animalpic(self,kind):
@@ -60,7 +60,16 @@ class AnimalStorage:
         return resp.json()['text']
 
 
-animal = AnimalStorage()
+class WeatherStorage:
+    # TODO: Find best way to parse XML or find another API that sends responsedata in JSON
+    def __init__(self):
+        self.placefile = 'weather is fine'
+
+    def fetch_weather(self):
+        # url = join prefix, place, suffix
+        # requests.get(url)
+        # return 6 hours of forecast
+        return self.placefile
 
 
 def fetch_joke():
@@ -71,13 +80,6 @@ def fetch_joke():
     return joke
 
 
-# Ideally returns weather in passed city + country code
-def fetch_weather():
-    # TODO: Find a good Weather API
-    resp = 'weather is fine'
-    return resp
-
-
 @bot.command()
 async def joke(ctx):
     """ Returns a dad-joke of exceptional calibre!
@@ -85,11 +87,13 @@ async def joke(ctx):
     await ctx.send(fetch_joke())
 
 
+@commands.cooldown(rate=1,per=600,type=commands.BucketType.default)
 @bot.command()
 async def weather(ctx):
     """ Not implemented, it's always fine weather.
         """
-    await ctx.send(fetch_weather())
+    response = weather.fetch_weather()
+    await ctx.send(response)
 
 
 @bot.command()
@@ -116,5 +120,8 @@ async def on_ready():
     name = bot.user.name
     print('Logged in as %s and ready to mingle!' % name)
 
+
+animal  = AnimalStorage()
+weather = WeatherStorage()
 
 bot.run(token)
