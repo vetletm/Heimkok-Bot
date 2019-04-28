@@ -1,0 +1,17 @@
+{
+  "0": {
+    "animal": "shibe",
+    "url": "http://shibe.online/api/shibes?count=1&urls=true&httpsUrls=true",
+    "file": 0
+  },
+  "1": {
+    "animal": "cat",
+    "url": "https://aws.random.cat/meow",
+    "file": "file"
+  },
+  "2": {
+    "animal": "fox",
+    "url": "https://randomfox.ca/floof/",
+    "file": "image"
+  }
+}
