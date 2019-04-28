@@ -2,8 +2,10 @@
 #   Interacting with Wunderlist
 # TODO: Add Wunderlist functionality
 # TODO: Add imagescraper functionality
+# TODO: Add better jokes functionality
+# TODO: Add Postgres for jokes, animals, and weather
 
-import discord, requests, random, sys
+import discord, requests, random, sys, json, time
 from discord.ext import commands
 
 bot = commands.Bot(command_prefix='!', description='Heimkok is a simple bot for simple stuff')
@@ -18,36 +20,24 @@ else:
 class AnimalStorage:
     # Animal dictionary to fetch a random animal picture
     def __init__(self):
-        self.animals = {
-        '0': {
-            'animal': 'shibe',
-            'url': 'http://shibe.online/api/shibes?count=1&urls=true&httpsUrls=true',
-            'file': 0
-        },
-        '1': {
-            'animal': 'cat',
-            'url': 'https://aws.random.cat/meow',
-            'file': 'file'
-            },
-        '2': {
-            'animal': 'fox',
-            'url': 'https://randomfox.ca/floof/',
-            'file': 'image'
-        },
-    }
+        # Reads jsonfile with all animals
+        with open('animals.json','r') as f:
+            self.animals = json.loads(f.read())
 
-    # Returns either a cat, a shibe, or a fox.
     def fetch_animalpic(self,kind):
-        # Set r to be random, mod is how many animals in animals-dict, animal is a random id to use for requests
-        mod = len(self.animals)
+        # Either random or specific, based on !cuteanimal or !cuteanimal <animal>
         if not kind:
+            mod = len(self.animals)
             r = random.randint(1, 1000)
             a = self.animals[str(r % mod)]
-        elif int(kind) < len(self.animals):
-            a = self.animals[kind]
-        else:
-            return 'Could not fetch cute pic, sorry.'
+        elif kind:
+            # Find the specific animal by (very inefficiently) iterating through the jsonfile
+            for i in range(len(self.animals)):
+                if kind == self.animals[str(i)]['animal']:
+                    a = self.animals[str(i)]
+                    break
 
+        # Attempt to fetch the direct link to the animal picture
         try:
             resp = requests.get(a['url'])
         except requests.exceptions.HTTPError as e:
@@ -100,14 +90,35 @@ async def catfact(ctx):
     await ctx.send(response)
 
 
-@bot.command()
-async def cuteanimal(ctx,*kind):
+@bot.group(invoke_without_command=True)
+async def cuteanimal(ctx):
     """ Will provide you with a picture of a cute animal!
-        usage: !cuteanimal <id of animal {0-2} >
-        animals: shibe = 0, cat = 1, fox = 2
-        If you only call !cuteanimal, you will randomly get either a fox, a shibe, or a cat.
+        usage: !cuteanimal <some animal> or !cuteanimal
+        If the animal you want to see is not in the list, it will return a random picture instead.
+        No specified animal will result in a random picture.
     """
-    response = animal.fetch_animalpic(''.join(kind))
+    response = animal.fetch_animalpic('')
+    await ctx.send(response)
+
+@cuteanimal.command(name='cat')
+async def cuteanimal_cat(ctx):
+    """ returns a cute cat
+    """
+    response = animal.fetch_animalpic('cat')
+    await ctx.send(response)
+
+@cuteanimal.command(name='shibe')
+async def cuteanimal_shibe(ctx):
+    """ returns a cute shiba inu
+    """
+    response = animal.fetch_animalpic('shibe')
+    await ctx.send(response)
+
+@cuteanimal.command(name='fox')
+async def cuteanimal_fox(ctx):
+    """ returns a cute fox
+    """
+    response = animal.fetch_animalpic('fox')
     await ctx.send(response)
 
 
