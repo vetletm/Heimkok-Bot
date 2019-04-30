@@ -29,20 +29,20 @@ class AnimalStorage:
         if not kind:
             mod = len(self.animals)
             r = random.randint(1, 1000)
-            a = self.animals[str(r % mod)]
+            animal = self.animals[str(r % mod)]
         elif kind:
             # Find the specific animal by (very inefficiently) iterating through the jsonfile
-            for i in range(len(self.animals)):
-                if kind == self.animals[str(i)]['animal']:
-                    a = self.animals[str(i)]
+            for i in self.animals:
+                if kind == self.animals[i]['animal']:
+                    animal = self.animals[i]
                     break
 
         # Attempt to fetch the direct link to the animal picture
         try:
-            resp = requests.get(a['url'])
+            resp = requests.get(animal['url'])
         except requests.exceptions.HTTPError as e:
             return 'Could not fetch cute pic, sorry. Reason: ' + str(e)
-        return resp.json()[a['file']]
+        return resp.json()[animal['file']]
 
     # Returns a neat cat fact
     def fetch_catfact(self):
