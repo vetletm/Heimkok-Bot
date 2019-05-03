@@ -1,127 +1,20 @@
 #!/usr/bin/env python3
 
-# Heimkok is a simple bot for simple stuff. Cute pics of animals and later:
-#   Interacting with Wunderlist
-# TODO: Add Wunderlist functionality
-# TODO: Add imagescraper functionality
-# TODO: Add better jokes functionality
-# TODO: Add Postgres for jokes, animals, and weather
-
-import discord, requests, random, sys, json, time
+import discord, sys
 from discord.ext import commands
+
+import weather as w
+import jokes as j
+import animals as a
 
 bot = commands.Bot(command_prefix='!', description='Heimkok is a simple bot for simple stuff')
 
+# TODO: Update to use argparse, because this just ain't no fucking good at all
 if len(sys.argv) > 2:
     BOT_TOKEN = sys.argv[1]
-    WEATHER_API_TOKEN = sys.argv[2]
 else:
     print('Usage: heimkok.py <BOT_TOKEN> <WEATHER_API_TOKEN>')
     exit(1)
-
-
-'''
-Gets its picture sources from a .json file, want to update to use Postgres instead
-'''
-class AnimalStorage:
-    # Animal dictionary to fetch a random animal picture
-    def __init__(self):
-        # Reads jsonfile with all animals
-        with open('animals.json','r') as f:
-            self.animals = json.loads(f.read())
-
-    def fetch_animalpic(self,kind):
-        # Either random or specific, based on !cuteanimal or !cuteanimal <animal>
-        if not kind:
-            mod = len(self.animals)
-            r = random.randint(1, 1000)
-            animal = self.animals[str(r % mod)]
-        elif kind:
-            # Find the specific animal by (very inefficiently) iterating through the jsonfile
-            for i in self.animals:
-                if kind == self.animals[i]['animal']:
-                    animal = self.animals[i]
-                    break
-
-        # Attempt to fetch the direct link to the animal picture
-        try:
-            resp = requests.get(animal['url'])
-        except requests.exceptions.HTTPError as e:
-            return 'Could not fetch cute pic, sorry. Reason: ' + str(e)
-        return resp.json()[animal['file']]
-
-    # Returns a neat cat fact
-    def fetch_catfact(self):
-        resp = requests.get('https://cat-fact.herokuapp.com/facts/random')
-        return resp.json()['text']
-
-
-'''
-This class uses the OpenWeatherMap API, free edition.
-'''
-class WeatherStorage:
-    def __init__(self):
-        self.prefix = 'https://api.openweathermap.org/data/2.5/weather?q='
-        self.suffix = '&units=metric'
-        self.appid = '&appid=' + WEATHER_API_TOKEN
-
-    def fetch_weather(self, city):
-        weather_url = ''.join([self.prefix,city,self.suffix,self.appid])
-        resp = requests.get(weather_url)
-
-        # Craft a neat response on the form:
-        '''
-        City: Oslo
-        Temperature: 3.58℃
-        Description: shower rain
-        Wind: 5.7m/s, direction: N
-        '''
-        temp    = "Temperature: " + str(resp.json()['main']['temp']) + chr(8451)
-        loc     = "City: " + str(resp.json()['name'])
-        descr   = "Description: " + resp.json()['weather'][0]['description']
-        winddir = self.degrees_to_cardinal(resp.json()['wind']['deg'])
-        wind    = "Wind: " + str(resp.json()['wind']['speed']) + 'm/s' + ', direction: ' + str(winddir)
-
-        forecast = '\n'.join([loc,temp,descr,wind])
-
-        return forecast
-
-    # Kudos to https://gist.github.com/RobertSudwarts/acf8df23a16afdb5837f for this:
-    def degrees_to_cardinal(self,d):
-        '''
-        note: this is highly approximate...
-        '''
-        dirs = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
-                "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]
-        ix = int((d + 11.25)/22.5)
-        return dirs[ix % 16]
-
-
-'''
-Fetches either a specific type of joke or a random one, will update with more sources as I go
-'''
-class JokeStorage:
-    def __init__(self):
-        with open('jokes.json','r') as f:
-            self.jokes = json.loads(f.read())
-
-    def fetch_joke_norris(self):
-        url = self.jokes['3']['jokes']['1']['url']
-        resp = requests.get(url)
-        joke = resp.json()['value']
-        return joke
-
-    def fetch_joke_programming(self):
-        url = self.jokes['2']['jokes']['1']['url']
-        resp = requests.get(url)
-        joke = resp.json()[0]['setup'] + ' || ' + resp.json()[0]['punchline'] + ' ||'
-        return joke
-
-    def fetch_joke_random(self):
-        url = self.jokes['2']['jokes']['2']['url']
-        resp = requests.get(url)
-        joke = resp.json()['setup'] + ' || ' + resp.json()['punchline'] + ' ||'
-        return joke
 
 
 @bot.group(invoke_without_command=False)
@@ -225,8 +118,8 @@ async def on_ready():
     print('Logged in as %s and ready to mingle!' % name)
 
 
-animal  = AnimalStorage()
-weather = WeatherStorage()
-jokes = JokeStorage()
+animal  = a.Animals()
+weather = w.Weather()
+jokes = j.Jokes()
 
 bot.run(BOT_TOKEN)
