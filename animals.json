@@ -13,5 +13,15 @@
     "animal": "fox",
     "url": "https://randomfox.ca/floof/",
     "file": "image"
+  },
+  "3": {
+    "animal": "dog",
+    "url": "https://dog.ceo/api/breeds/image/random",
+    "file": "message"
+  },
+  "4": {
+    "animal": "dog2",
+    "url": "https://random.dog/woof.json",
+    "file": "url"
   }
 }
