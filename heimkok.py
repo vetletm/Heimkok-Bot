@@ -20,6 +20,9 @@ else:
     exit(1)
 
 
+'''
+Gets its picture sources from a .json file, want to update to use Postgres instead
+'''
 class AnimalStorage:
     # Animal dictionary to fetch a random animal picture
     def __init__(self):
@@ -51,6 +54,7 @@ class AnimalStorage:
     def fetch_catfact(self):
         resp = requests.get('https://cat-fact.herokuapp.com/facts/random')
         return resp.json()['text']
+
 
 '''
 This class uses the OpenWeatherMap API, free edition.
@@ -93,25 +97,68 @@ class WeatherStorage:
         return dirs[ix % 16]
 
 
-def fetch_joke():
-    # TODO: Expand to accept arguments to return different types of jokes
-    resp = requests.get('https://official-joke-api.appspot.com/jokes/programming/random')
-    data = resp.json()[0]
-    joke = data['setup'] + ' || ' + data['punchline'] + ' ||'
-    return joke
+'''
+Fetches either a specific type of joke or a random one, will update with more sources as I go
+'''
+class JokeStorage:
+    def __init__(self):
+        with open('jokes.json','r') as f:
+            self.jokes = json.loads(f.read())
+
+    def fetch_joke_norris(self):
+        url = self.jokes['3']['jokes']['1']['url']
+        resp = requests.get(url)
+        joke = resp.json()['value']
+        return joke
+
+    def fetch_joke_programming(self):
+        url = self.jokes['2']['jokes']['1']['url']
+        resp = requests.get(url)
+        joke = resp.json()[0]['setup'] + ' || ' + resp.json()[0]['punchline'] + ' ||'
+        return joke
+
+    def fetch_joke_random(self):
+        url = self.jokes['2']['jokes']['2']['url']
+        resp = requests.get(url)
+        joke = resp.json()['setup'] + ' || ' + resp.json()['punchline'] + ' ||'
+        return joke
 
 
-@bot.command()
+@bot.group(invoke_without_command=False)
 async def joke(ctx):
-    """ Returns a dad-joke of exceptional calibre!
+    """ Must be used with a desired type of joke:
+        Chuck Norris, Programming, or Random.
+        usage: !joke norris
         """
-    await ctx.send(fetch_joke())
+    pass
+
+@joke.command(name='norris')
+async def joke_norris(ctx):
+    """ A kick-ass Chuck Norris joke!
+        """
+    response = jokes.fetch_joke_norris()
+    await ctx.send(response)
+
+@joke.command(name='programming')
+async def joke_programming(ctx):
+    """ Nerdy jokes
+        """
+    response = jokes.fetch_joke_programming()
+    await ctx.send(response)
+
+@joke.command(name='random')
+async def joke_random(ctx):
+    """ Random, funny jokes
+        """
+    response = jokes.fetch_joke_random()
+    await ctx.send(response)
 
 
 @commands.cooldown(rate=1,per=1,type=commands.BucketType.default)
 @bot.command()
 async def weather(ctx,req):
-    """ Not implemented, it's always fine weather.
+    """ Gives you some information based on your desired city.
+    Usage: !weather Oslo (keep it unambiguous)
         """
     city_request = ''.join(req)
     response = weather.fetch_weather(city_request)
@@ -157,6 +204,20 @@ async def cuteanimal_fox(ctx):
     response = animal.fetch_animalpic('fox')
     await ctx.send(response)
 
+@cuteanimal.command(name='dog')
+async def cuteanimal_dog(ctx):
+    """ returns a cute dog
+    """
+    response = animal.fetch_animalpic('dog')
+    await ctx.send(response)
+
+@cuteanimal.command(name='dog2')
+async def cuteanimal_dog(ctx):
+    """ more dogs!
+    """
+    response = animal.fetch_animalpic('dog2')
+    await ctx.send(response)
+
 
 @bot.event
 async def on_ready():
@@ -166,5 +227,6 @@ async def on_ready():
 
 animal  = AnimalStorage()
 weather = WeatherStorage()
+jokes = JokeStorage()
 
 bot.run(BOT_TOKEN)
