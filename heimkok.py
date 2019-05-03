@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # Heimkok is a simple bot for simple stuff. Cute pics of animals and later:
 #   Interacting with Wunderlist
 # TODO: Add Wunderlist functionality
@@ -10,10 +12,11 @@ from discord.ext import commands
 
 bot = commands.Bot(command_prefix='!', description='Heimkok is a simple bot for simple stuff')
 
-if len(sys.argv) > 1:
-    token = sys.argv[1]
+if len(sys.argv) > 2:
+    BOT_TOKEN = sys.argv[1]
+    WEATHER_API_TOKEN = sys.argv[2]
 else:
-    print('Usage: heimkok.py <token>')
+    print('Usage: heimkok.py <BOT_TOKEN> <WEATHER_API_TOKEN>')
     exit(1)
 
 
@@ -49,8 +52,45 @@ class AnimalStorage:
         resp = requests.get('https://cat-fact.herokuapp.com/facts/random')
         return resp.json()['text']
 
+'''
+This class uses the OpenWeatherMap API, free edition.
+'''
+class WeatherStorage:
+    def __init__(self):
+        self.prefix = 'https://api.openweathermap.org/data/2.5/weather?q='
+        self.suffix = '&units=metric'
+        self.appid = '&appid=' + WEATHER_API_TOKEN
 
-animal = AnimalStorage()
+    def fetch_weather(self, city):
+        weather_url = ''.join([self.prefix,city,self.suffix,self.appid])
+        resp = requests.get(weather_url)
+
+        # Craft a neat response on the form:
+        '''
+        City: Oslo
+        Temperature: 3.58℃
+        Description: shower rain
+        Wind: 5.7m/s, direction: N
+        '''
+        temp    = "Temperature: " + str(resp.json()['main']['temp']) + chr(8451)
+        loc     = "City: " + str(resp.json()['name'])
+        descr   = "Description: " + resp.json()['weather'][0]['description']
+        winddir = self.degrees_to_cardinal(resp.json()['wind']['deg'])
+        wind    = "Wind: " + str(resp.json()['wind']['speed']) + 'm/s' + ', direction: ' + str(winddir)
+
+        forecast = '\n'.join([loc,temp,descr,wind])
+
+        return forecast
+
+    # Kudos to https://gist.github.com/RobertSudwarts/acf8df23a16afdb5837f for this:
+    def degrees_to_cardinal(self,d):
+        '''
+        note: this is highly approximate...
+        '''
+        dirs = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
+                "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]
+        ix = int((d + 11.25)/22.5)
+        return dirs[ix % 16]
 
 
 def fetch_joke():
@@ -61,13 +101,6 @@ def fetch_joke():
     return joke
 
 
-# Ideally returns weather in passed city + country code
-def fetch_weather():
-    # TODO: Find a good Weather API
-    resp = 'weather is fine'
-    return resp
-
-
 @bot.command()
 async def joke(ctx):
     """ Returns a dad-joke of exceptional calibre!
@@ -75,11 +108,14 @@ async def joke(ctx):
     await ctx.send(fetch_joke())
 
 
+@commands.cooldown(rate=1,per=1,type=commands.BucketType.default)
 @bot.command()
-async def weather(ctx):
+async def weather(ctx,req):
     """ Not implemented, it's always fine weather.
         """
-    await ctx.send(fetch_weather())
+    city_request = ''.join(req)
+    response = weather.fetch_weather(city_request)
+    await ctx.send(response)
 
 
 @bot.command()
@@ -128,4 +164,7 @@ async def on_ready():
     print('Logged in as %s and ready to mingle!' % name)
 
 
-bot.run(token)
+animal  = AnimalStorage()
+weather = WeatherStorage()
+
+bot.run(BOT_TOKEN)
