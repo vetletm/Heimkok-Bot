@@ -1,0 +1,5 @@
+postnr.json
+*.sh
+animal_to_json.py
+test.py
+__pycache__/*
