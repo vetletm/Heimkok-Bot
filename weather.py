@@ -1,5 +1,5 @@
 # Contains the class for getting the weather
-import sys, requests
+import requests, os
 '''
 This class uses the OpenWeatherMap API, free edition.
 '''
@@ -7,7 +7,11 @@ class Weather:
     def __init__(self):
         self.prefix = 'https://api.openweathermap.org/data/2.5/weather?q='
         self.suffix = '&units=metric'
-        self.appid = '&appid=' + sys.argv[2]
+        if 'WEATHER_API_TOKEN' in os.environ:
+            self.appid = '&appid=' + os.environ['WEATHER_API_TOKEN']
+        else:
+            print('WEATHER_API_TOKEN must be passed as an environment variable')
+            exit(1)
 
     def fetch_weather(self, city):
         weather_url = ''.join([self.prefix,city,self.suffix,self.appid])
