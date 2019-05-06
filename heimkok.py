@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import discord, sys
+import discord, os
 from discord.ext import commands
 
 import weather as w
@@ -9,13 +9,11 @@ import animals as a
 
 bot = commands.Bot(command_prefix='!', description='Heimkok is a simple bot for simple stuff')
 
-# TODO: Update to use argparse, because this just ain't no fucking good at all
-if len(sys.argv) > 2:
-    BOT_TOKEN = sys.argv[1]
+if 'BOT_TOKEN' in os.environ:
+    BOT_TOKEN = os.environ['BOT_TOKEN']
 else:
-    print('Usage: heimkok.py <BOT_TOKEN> <WEATHER_API_TOKEN>')
+    print('BOT_TOKEN must be passed as an environment variable')
     exit(1)
-
 
 @bot.group(invoke_without_command=False)
 async def joke(ctx):
