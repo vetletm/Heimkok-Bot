@@ -1,16 +1,20 @@
 # Contains the class for getting pictures of animals
-import requests, json, random
-'''
-Gets its picture sources from a .json file, want to update to use Postgres instead
-'''
+import requests
+import json
+import random
+
+
 class Animals:
+    '''
+    Gets its picture sources from a .json file, want to update to use Postgres instead
+    '''
     # Animal dictionary to fetch a random animal picture
     def __init__(self):
         # Reads jsonfile with all animals
-        with open('animals.json','r') as f:
+        with open('animals.json', 'r') as f:
             self.animals = json.loads(f.read())
 
-    def fetch_animalpic(self,kind):
+    def fetch_animalpic(self, kind):
         # Either random or specific, based on !cuteanimal or !cuteanimal <animal>
         if not kind:
             mod = len(self.animals)
