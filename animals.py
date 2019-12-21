@@ -7,7 +7,7 @@ class Animals:
     # Animal dictionary to fetch a random animal picture
     def __init__(self):
         # Reads jsonfile with all animals
-        with open('animals.json','r') as f:
+        with open('animals.json', 'r') as f:
             self.animals = json.loads(f.read())
 
     def fetch_animalpic(self,kind):

@@ -1,8 +1,8 @@
-# Contains the class for getting the weather
-import requests, os
-'''
-This class uses the OpenWeatherMap API, free edition.
-'''
+import os
+
+import requests
+
+
 class Weather:
     def __init__(self):
         self.prefix = 'https://api.openweathermap.org/data/2.5/weather?q='
@@ -14,9 +14,10 @@ class Weather:
             exit(1)
 
     def fetch_weather(self, city):
-        weather_url = ''.join([self.prefix,city,self.suffix,self.appid])
+        weather_url = f'{self.prefix}{city}{self.suffix}{self.appid}'
         resp = requests.get(weather_url)
 
+        resp.raise_for_status()
         # Craft a neat response on the form:
         '''
         City: Oslo
@@ -24,22 +25,24 @@ class Weather:
         Description: shower rain
         Wind: 5.7m/s, direction: N
         '''
-        temp    = "Temperature: " + str(resp.json()['main']['temp']) + chr(8451)
-        loc     = "City: " + str(resp.json()['name'])
-        descr   = "Description: " + resp.json()['weather'][0]['description']
-        winddir = self.degrees_to_cardinal(resp.json()['wind']['deg'])
-        wind    = "Wind: " + str(resp.json()['wind']['speed']) + 'm/s' + ', direction: ' + str(winddir)
+        data = resp.json()
+        temp = f'Temperature: {data["main"]["temp"]}{chr(6541)}'
+        loc = f'City: {data["name"]}'
+        desc = f'Description: {data["weather"][0]["description"]}'
+        wind_dir = f'{self.degrees_to_cardinal(data["wind"]["deg"])}'
+        wind = f'Wind: {data["wind"]["speed"]} m/s, direction: {wind_dir}'
 
-        forecast = '\n'.join([loc,temp,descr,wind])
+        forecast = '\n'.join([loc, temp, desc, wind])
 
         return forecast
 
     # Kudos to https://gist.github.com/RobertSudwarts/acf8df23a16afdb5837f for this:
-    def degrees_to_cardinal(self,d):
-        '''
+    @staticmethod
+    def degrees_to_cardinal(d):
+        """
         note: this is highly approximate...
-        '''
+        """
         dirs = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
                 "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]
-        ix = int((d + 11.25)/22.5)
+        ix = int((d + 11.25) / 22.5)
         return dirs[ix % 16]
