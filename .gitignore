@@ -4,3 +4,5 @@ animal_to_json.py
 test.py
 __pycache__/*
 Dockerfile
+venv/
+.idea/
