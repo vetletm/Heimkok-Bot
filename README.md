@@ -8,21 +8,30 @@ Launch the bot: `./heimkok.py`, you will get a little ready message when the bot
 ## To launch as a Docker container:
 Create a Dockerfile in the same directory as all the python code with the following content:
 ```
-FROM python:3.6-alpine
+FROM python:3.8-alpine
 
 COPY . /bot
 
 WORKDIR /bot
 
-RUN pip3 install -U discord.py
-RUN pip3 install -U requests
+# Install build-dependencies
+RUN apk add --no-cache --virtual .build-deps gcc musl-dev
 
-ENV BOT_TOKEN <your_bot_token>
-ENV WEATHER_API_TOKEN <your_openweathermap_token>
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
 
-CMD ["python3", "./heimkok.py"]
+# Remove unnecessary packages
+RUN apk del .build-deps gcc musl-dev
+
+ENV BOT_TOKEN <token>
+ENV WEATHER_API_TOKEN <token>
+
+CMD ["python", "heimkok.py"]
+
 
 ```
+With the latest alpine image, the multidict package fails without gcc installed. The above will install it into the image, install the required packages, then uninstalls gcc to save space.
+
 Build the image:
 ```
 docker build -t heimkok-bot .
