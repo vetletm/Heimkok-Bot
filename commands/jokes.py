@@ -1,10 +1,13 @@
 # Contains the class for getting funny jokes
-import requests, json
+import json
+import requests
 
-'''
-Fetches either a specific type of joke or a random one, will update with more sources as I go
-'''
+
 class Jokes:
+    """
+    Fetches either a specific type of joke or a random one, will update with more sources as I go
+    """
+
     def __init__(self):
         with open('data/jokes.json', 'r') as f:
             self.jokes = json.loads(f.read())
