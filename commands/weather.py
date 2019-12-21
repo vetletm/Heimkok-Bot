@@ -5,18 +5,22 @@ import requests
 
 class Weather:
     def __init__(self):
+        """
+        :raises ValueError: If OpenWeatherMap API token is missing
+        """
         self.prefix = 'https://api.openweathermap.org/data/2.5/weather?q='
         self.suffix = '&units=metric'
         if 'WEATHER_API_TOKEN' in os.environ:
             self.appid = '&appid=' + os.environ['WEATHER_API_TOKEN']
         else:
-            print('WEATHER_API_TOKEN must be passed as an environment variable')
-            exit(1)
+            raise ValueError('OpenWeatherMap API Token must be given as an environment variable')
 
     def fetch_weather(self, city):
+        """
+        :raise: Raises exception from resp.raise_for_status()
+        """
         weather_url = f'{self.prefix}{city}{self.suffix}{self.appid}'
         resp = requests.get(weather_url)
-
         resp.raise_for_status()
         # Craft a neat response on the form:
         '''

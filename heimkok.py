@@ -16,7 +16,7 @@ else:
 
 
 @bot.group(invoke_without_command=False)
-async def joke(ctx):
+async def joke():
     """ Must be used with a desired type of joke:
         Chuck Norris, Programming, or Random.
         usage: !joke norris

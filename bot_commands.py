@@ -1,12 +1,13 @@
-from commands.weather import Weather
 from commands.animals import Animals
 from commands.jokes import Jokes
+from commands.weather import Weather
 
 
 class BotCommands:
     """
     Wrapper class for all functionality
     """
+
     def __init__(self):
         self.weather = Weather()
         self.animals = Animals()
