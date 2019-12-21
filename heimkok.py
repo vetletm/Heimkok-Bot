@@ -1,19 +1,22 @@
 #!/usr/bin/env python3
 
-import discord, os
+import discord
+import os
 from discord.ext import commands
 
 import weather as w
 import jokes as j
 import animals as a
 
-bot = commands.Bot(command_prefix='!', description='Heimkok is a simple bot for simple stuff')
+bot = commands.Bot(command_prefix='!',
+                   description='Heimkok is a simple bot for simple stuff')
 
 if 'BOT_TOKEN' in os.environ:
     BOT_TOKEN = os.environ['BOT_TOKEN']
 else:
     print('BOT_TOKEN must be passed as an environment variable')
     exit(1)
+
 
 @bot.group(invoke_without_command=False)
 async def joke(ctx):
@@ -23,6 +26,7 @@ async def joke(ctx):
         """
     pass
 
+
 @joke.command(name='norris')
 async def joke_norris(ctx):
     """ A kick-ass Chuck Norris joke!
@@ -30,12 +34,14 @@ async def joke_norris(ctx):
     response = jokes.fetch_joke_norris()
     await ctx.send(response)
 
+
 @joke.command(name='programming')
 async def joke_programming(ctx):
     """ Nerdy jokes
         """
     response = jokes.fetch_joke_programming()
     await ctx.send(response)
+
 
 @joke.command(name='random')
 async def joke_random(ctx):
@@ -45,9 +51,9 @@ async def joke_random(ctx):
     await ctx.send(response)
 
 
-@commands.cooldown(rate=1,per=1,type=commands.BucketType.default)
+@commands.cooldown(rate=1, per=1, type=commands.BucketType.default)
 @bot.command()
-async def weather(ctx,req):
+async def weather(ctx, req):
     """ Gives you some information based on your desired city.
     Usage: !weather Oslo (keep it unambiguous)
         """
@@ -74,12 +80,14 @@ async def cuteanimal(ctx):
     response = animal.fetch_animalpic('')
     await ctx.send(response)
 
+
 @cuteanimal.command(name='cat')
 async def cuteanimal_cat(ctx):
     """ returns a cute cat
     """
     response = animal.fetch_animalpic('cat')
     await ctx.send(response)
+
 
 @cuteanimal.command(name='shibe')
 async def cuteanimal_shibe(ctx):
@@ -88,6 +96,7 @@ async def cuteanimal_shibe(ctx):
     response = animal.fetch_animalpic('shibe')
     await ctx.send(response)
 
+
 @cuteanimal.command(name='fox')
 async def cuteanimal_fox(ctx):
     """ returns a cute fox
@@ -95,12 +104,14 @@ async def cuteanimal_fox(ctx):
     response = animal.fetch_animalpic('fox')
     await ctx.send(response)
 
+
 @cuteanimal.command(name='dog')
 async def cuteanimal_dog(ctx):
     """ returns a cute dog
     """
     response = animal.fetch_animalpic('dog')
     await ctx.send(response)
+
 
 @cuteanimal.command(name='dog2')
 async def cuteanimal_dog(ctx):
@@ -116,7 +127,7 @@ async def on_ready():
     print('Logged in as %s and ready to mingle!' % name)
 
 
-animal  = a.Animals()
+animal = a.Animals()
 weather = w.Weather()
 jokes = j.Jokes()
 
