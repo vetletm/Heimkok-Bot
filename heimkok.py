@@ -16,7 +16,7 @@ else:
 
 
 @bot.group(invoke_without_command=False)
-async def joke():
+async def joke(ctx):
     """ Must be used with a desired type of joke:
         Chuck Norris, Programming, or Random.
         usage: !joke norris
@@ -55,7 +55,7 @@ async def weather(ctx, req):
     Usage: !weather Oslo (keep it unambiguous)
         """
     city_request = ''.join(req)
-    response = weather.fetch_weather(city_request)
+    response = command.get_weather(city_request)
     await ctx.send(response)
 
 

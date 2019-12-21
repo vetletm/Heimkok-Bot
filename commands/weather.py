@@ -30,7 +30,7 @@ class Weather:
         Wind: 5.7m/s, direction: N
         '''
         data = resp.json()
-        temp = f'Temperature: {data["main"]["temp"]}{chr(6541)}'
+        temp = f'Temperature: {data["main"]["temp"]}' + chr(6541)
         loc = f'City: {data["name"]}'
         desc = f'Description: {data["weather"][0]["description"]}'
         wind_dir = f'{self.degrees_to_cardinal(data["wind"]["deg"])}'

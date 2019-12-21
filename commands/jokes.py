@@ -9,7 +9,7 @@ class Jokes:
     """
 
     def __init__(self):
-        with open('data/jokes.json', 'r') as f:
+        with open('commands/data/jokes.json', 'r') as f:
             self.jokes = json.loads(f.read())
 
     def fetch_joke_norris(self):
