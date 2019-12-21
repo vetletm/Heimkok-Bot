@@ -1,5 +1,5 @@
-# Contains the class for getting funny jokes
 import json
+
 import requests
 
 

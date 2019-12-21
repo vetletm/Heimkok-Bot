@@ -1,6 +1,6 @@
-# Contains the class for getting pictures of animals
 import json
 import random
+
 import requests
 
 

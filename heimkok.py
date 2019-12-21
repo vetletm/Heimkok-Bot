@@ -6,7 +6,8 @@ from discord.ext import commands
 
 from bot_commands import BotCommands
 
-bot = commands.Bot(command_prefix='!', description='Heimkok is a simple bot for simple stuff')
+bot = commands.Bot(command_prefix='!',
+                   description='Heimkok is a simple bot for simple stuff')
 
 if 'BOT_TOKEN' in os.environ:
     BOT_TOKEN = os.environ['BOT_TOKEN']
