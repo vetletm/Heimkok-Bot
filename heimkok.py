@@ -4,9 +4,7 @@ import os
 
 from discord.ext import commands
 
-import animals as a
-import jokes as j
-import weather as w
+from commands import weather as w, animals as a, jokes as j
 
 bot = commands.Bot(command_prefix='!', description='Heimkok is a simple bot for simple stuff')
 

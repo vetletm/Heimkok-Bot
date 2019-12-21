@@ -6,7 +6,7 @@ Fetches either a specific type of joke or a random one, will update with more so
 '''
 class Jokes:
     def __init__(self):
-        with open('jokes.json','r') as f:
+        with open('data/jokes.json', 'r') as f:
             self.jokes = json.loads(f.read())
 
     def fetch_joke_norris(self):
