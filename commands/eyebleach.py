@@ -26,6 +26,9 @@ class Eyebleacher:
     a persistent issue, reconsider using Praw.
     """
     def __init__(self):
+        """
+        Defines start and end of url to scrape and gets all subreddits from file
+        """
         self.endpoint = 'http://www.reddit.com/r/'
         self.suffix = '/top/.json?count=20?sort=top&t=day'
 
@@ -52,6 +55,28 @@ class Eyebleacher:
         :param wanted_animal: The wanted type of animal
         :return: direct link to the image, gif, or video.
         """
+        pass
+
+    def _get_post(self, subreddit: str) -> str:
+        """
+        Returns a random top post from a given subreddit
+        :param subreddit: Name of the subreddit
+        :return: Direct link to a random post
+        """
+        # calls _get_state for content
+
+        # returns a random post from the top posts
+        pass
+
+    def _get_state(self, subreddit: str) -> Dict[str, Tuple[Any]]:
+        """
+        Gets the current state of given subreddit
+        :param subreddit: Name of subreddit
+        :return: Content of the subreddit
+        """
+        # If state is old, call _update_state and return the result
+        # If no file with subreddit name is found, get content and call _store_state
+        # return content of subreddit
         pass
 
     def _store_state(self, subreddit: Dict[str, Tuple[Any]]) -> bool:
