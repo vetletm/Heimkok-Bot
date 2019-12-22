@@ -1,3 +1,5 @@
+from typing import Dict, List, Any
+
 import json
 
 
@@ -7,6 +9,7 @@ class Eyebleacher:
     Will be an improvement on Animals
     TODO:
         - Implement persistent storage in the form of JSON, just as Animals-class.
+            - Search all files starting with subreddit for name as a suffix
         - Can either use praw for direct interaction with Reddit API, or:
         - Use requests to manually scrape the json data from a subreddit
 
@@ -19,8 +22,8 @@ class Eyebleacher:
         - return top post
     """
     def __init__(self):
-        self.endpoint = 'api/v1/something'
-        self.creds = {'user': 'someUser', 'id': 'someId'}
+        self.endpoint = 'http://www.reddit.com/r/'
+        self.suffix = '/top/.json?count=20?sort=top&t=day'
 
         with open('commands/data/subreddits.json', 'r') as file:
             self.subreddits = json.loads(file.read())
@@ -36,5 +39,19 @@ class Eyebleacher:
         """
         :param wanted_animal: The wanted type of animal
         :return: direct link to the image, gif, or video.
+        """
+        pass
+
+    def _store_state(self, subreddit: Dict[str, Tuple[Any]]) -> bool:
+        """
+        Will store the state of the subreddit in a json-file
+        :param subreddit: Dictionary of the subreddit data
+        :return: Boolean, True if successful, False if it failed
+        """
+        pass
+
+    def _update_state(self, subreddit: str) -> bool:
+        """
+        Stores the state of the subreddit data to avoid too many calls to reddit
         """
         pass

@@ -1,0 +1,17 @@
+{
+  "stored_at": "someData",
+  "content": {
+    "kind": "Listing",
+    "data": {
+      "modhash": "someHash",
+      "children": [
+        {
+          "kind": "t3",
+          "data": {
+            "someKey": "someValue"
+          }
+        }
+      ]
+    }
+  }
+}
