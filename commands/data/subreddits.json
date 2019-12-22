@@ -3,6 +3,10 @@
     {
       "type": "all",
       "subreddit": "aww"
+    },
+    {
+      "type": "cat",
+      "subreddit": "murdermittens"
     }
   ]
 }

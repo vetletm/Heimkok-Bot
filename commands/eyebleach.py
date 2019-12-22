@@ -1,4 +1,4 @@
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Tuple
 
 import json
 
@@ -37,7 +37,8 @@ class Eyebleacher:
         Will return a list of all available subreddits
         :return: Str of a joined list of subreddits as found in "subreddits.json"
         """
-        pass
+        s_list = ', '.join([subreddit['subreddit'] for subreddit in self.subreddits['subreddits']])
+        return s_list
 
     def fetch_random(self) -> str:
         """
