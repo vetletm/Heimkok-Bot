@@ -2,7 +2,8 @@ postnr.json
 *.sh
 animal_to_json.py
 test.py
-__pycache__/*
+*/__pycache__*
+__pycache__
 Dockerfile
 venv/
 .idea/
