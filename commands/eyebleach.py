@@ -1,4 +1,4 @@
-from typing import Dict, List, Any, Tuple
+from typing import Dict, Any, Tuple
 
 import json
 import random
@@ -27,6 +27,7 @@ class Eyebleacher:
     Using requests might result in response 429 from Reddit, if this turns out to be
     a persistent issue, reconsider using Praw.
     """
+
     def __init__(self):
         """
         Defines start and end of url to scrape and gets all subreddits from file
@@ -86,10 +87,13 @@ class Eyebleacher:
     def _get_state(self, subreddit: str) -> Dict[str, Tuple[Any]]:
         """
         Gets the current state of given subreddit
+        TODO:
+            - Update to use _store_state and _update_state if state of subreddit is a day old
+            - Update to use regex to find the file with the subreddit content
         :param subreddit: Name of subreddit
         :return: Content of the subreddit
         """
-        # Search for subreddit in files with regex:
+        # Simply get state from reddit for now
         url = f'{self.endpoint}{subreddit}{self.suffix}'
         content = requests.get(url)
 
