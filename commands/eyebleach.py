@@ -1,6 +1,8 @@
 from typing import Dict, List, Any, Tuple
 
 import json
+import random
+import requests
 
 
 class Eyebleacher:
@@ -48,7 +50,15 @@ class Eyebleacher:
         Finds a random type from backend json
         :return: direct link to the image, gif, or video.
         """
-        pass
+        # Find a random index from list of subreddits
+        mod = len(self.subreddits['subreddits'])
+        n = random.randint(1, 1000)
+        subreddit = self.subreddits['subreddits'][n % mod]
+
+        # Get post from subreddit
+        post = self._get_post(subreddit['subreddit'])
+
+        return post
 
     def fetch_specific(self, wanted_animal: str) -> str:
         """
@@ -64,9 +74,14 @@ class Eyebleacher:
         :return: Direct link to a random post
         """
         # calls _get_state for content
+        subreddit_state = self._get_state(subreddit)
 
-        # returns a random post from the top posts
-        pass
+        # get random post
+        mod = len(subreddit_state['data']['children'])
+        n = random.randint(1, 1000)
+        post = subreddit_state['data']['children'][n % mod]['data']['url']
+
+        return post
 
     def _get_state(self, subreddit: str) -> Dict[str, Tuple[Any]]:
         """
@@ -74,10 +89,15 @@ class Eyebleacher:
         :param subreddit: Name of subreddit
         :return: Content of the subreddit
         """
-        # If state is old, call _update_state and return the result
-        # If no file with subreddit name is found, get content and call _store_state
-        # return content of subreddit
-        pass
+        # Search for subreddit in files with regex:
+        url = f'{self.endpoint}{subreddit}{self.suffix}'
+        content = requests.get(url)
+
+        content.raise_for_status()
+
+        content = json.loads(content)
+
+        return content
 
     def _store_state(self, subreddit: Dict[str, Tuple[Any]]) -> bool:
         """

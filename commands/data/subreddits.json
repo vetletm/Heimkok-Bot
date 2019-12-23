@@ -7,10 +7,58 @@
     {
       "type": "all",
       "subreddit": "eyebleach"
-    }
+    },
     {
       "type": "cat",
       "subreddit": "murdermittens"
+    },
+    {
+      "type": "dog",
+      "subreddit": "WhatsWrongWithYourDog"
+    },
+    {
+      "type": "cat",
+      "subreddit": "CatTaps"
+    },
+    {
+      "type": "all",
+      "subreddit": "DelightfullyChubby"
+    },
+    {
+      "type": "all",
+      "subreddit": "Hardcoreaww"
+    },
+    {
+      "type": "dog",
+      "subreddit": "Rarepuppers"
+    },
+    {
+      "type": "cat",
+      "subreddit": "Catpictures"
+    },
+    {
+      "type": "wild",
+      "subreddit": "Foxes"
+    },
+    {
+      "type": "bird",
+      "subreddit": "Owls"
+    },
+    {
+      "type": "wild",
+      "subreddit": "Bears"
+    },
+    {
+      "type": "cat",
+      "subreddit": "Cats"
+    },
+    {
+      "type": "rodent",
+      "subreddit": "Ferrets"
+    },
+    {
+      "type": "rodent",
+      "subreddit": "RATS"
     }
   ]
 }
