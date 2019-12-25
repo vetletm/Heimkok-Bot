@@ -176,6 +176,16 @@ async def cuteanimal_dog(ctx):
         logger.warning('Could not fetch a picture of a dog2, error: %s', error)
 
 
+@bot.command()
+async def eyebleach(ctx):
+    """
+    Bleach yer eyes!
+    """
+    response = command.eyebleach('')
+    await ctx.send(response)
+    logger.info('Fetched and returned a random post')
+
+
 @bot.event
 async def on_ready():
     name = bot.user.name
