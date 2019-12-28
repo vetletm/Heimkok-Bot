@@ -40,3 +40,6 @@ class BotCommands:
 
     def get_subreddits(self):
         return self.eyebleacher.list_subreddits()
+
+    def get_types(self):
+        return self.eyebleacher.list_types()

@@ -42,8 +42,14 @@ class Eyebleacher:
         Will return a list of all available subreddits
         :return: Str of a joined list of subreddits as found in "subreddits.json"
         """
-        s_list = ', '.join([subreddit['subreddit'] for subreddit in self.subreddits['subreddits']])
-        return s_list
+        return ', '.join(set([subreddit['subreddit'] for subreddit in self.subreddits['subreddits']]))
+
+    def list_types(self) -> str:
+        """
+        Will return a list of all the different types of subreddits
+        :return: Str of a joined list of subreddit types as found in "subreddits.json"
+        """
+        return ', '.join(set([subreddit['type'] for subreddit in self.subreddits['subreddits']]))
 
     def fetch_random(self) -> str:
         """
