@@ -47,3 +47,10 @@ docker run -d heimkok-bot
 - Discord.py
 - requests
 - praw
+
+## Contributing
+All new functionality should be added as a class in `commands/`, if the class uses any data from files, store this data in `commands/data/`
+
+To let the bot access the new stuffs, add a method in `BotCommands` (`bot_commands.py`) which uses the newly implemented class.
+
+Add a bot command to `heimkok.py` using the discord.ext decorators and code style.
