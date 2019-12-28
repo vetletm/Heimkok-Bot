@@ -192,11 +192,14 @@ async def on_ready():
     logger.info('Logged in as %s and ready to mingle!', name)
 
 
-command = BotCommands()
+try:
+    command = BotCommands()
+except Exception as error:
+    logger.critical('Failed to define command-object, reason: %s', error)
+    exit(2)
 
 try:
     bot.run(BOT_TOKEN)
-    logger.info('Started bot!')
 except Exception as error:
     logger.critical('Failed to start bot, error: %s', error)
-    exit(2)
+    exit(3)
