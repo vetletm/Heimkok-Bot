@@ -16,7 +16,9 @@ class Eyebleacher:
 
     def __init__(self):
         """
-        Defines start and end of url to scrape and gets all subreddits from file
+        attempts to get all the required environment variables and define the reddit-instance,
+        will also attempt to load the file with subreddits to use for eyebleaching
+        :raises ValueError: If any environment variables are missing
         """
         if 'REDDIT_CLIENT_ID' in os.environ:
             self.client_id = os.environ['REDDIT_CLIENT_ID']
@@ -61,7 +63,10 @@ class Eyebleacher:
         :param wanted_animal: The wanted type of animal
         :return: direct link to the image, gif, or video.
         """
-        post = self._get_post(subreddit=self.subreddits[wanted_animal])
+        kind = [subreddit['subreddit'] for subreddit in self.subreddits['subreddits'] if subreddit['type'] == wanted_animal]
+
+        post = self._get_post(kind[self._random_index(kind)])
+
         return post
 
     def _get_post(self, subreddit: str) -> str:
