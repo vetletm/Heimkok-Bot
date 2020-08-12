@@ -1,4 +1,5 @@
 from commands.animals import Animals
+from commands.covid import Covid
 from commands.jokes import Jokes
 from commands.weather import Weather
 
@@ -12,6 +13,7 @@ class BotCommands:
         self.weather = Weather()
         self.animals = Animals()
         self.jokes = Jokes()
+        self.covid = Covid()
 
     def get_weather(self, city):
         return self.weather.fetch_weather(city)
@@ -29,3 +31,6 @@ class BotCommands:
             return self.jokes.fetch_joke_norris()
         if joke_type == 'random':
             return self.jokes.fetch_joke_random()
+
+    def get_covid(self):
+        return self.covid.fetch_status()
