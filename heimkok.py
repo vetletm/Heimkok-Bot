@@ -176,6 +176,49 @@ async def cuteanimal_dog(ctx):
         logger.warning('Could not fetch a picture of a dog2, error: %s', error)
 
 
+@bot.group(invoke_without_command=False)
+async def eyebleach(ctx):
+    """
+    Bleach yer eyes!
+    """
+    try:
+        response = command.eyebleach('')
+        await ctx.send(response)
+        logger.info('Fetched and returned a random post')
+    except Exception as error:
+        logger.warning('Could not get a random post, error: %s', error)
+
+
+@eyebleach.command(name='types')
+async def eyebleach_types(ctx):
+    """
+    List available types
+    :param ctx:
+    :return:
+    """
+    try:
+        response = command.get_types()
+        await ctx.send(response)
+        logger.info('Sent list of types of subreddits')
+    except Exception as error:
+        logger.warning('Could not send list of types of subreddits, error: %s', error)
+
+
+@eyebleach.command(name='subreddits')
+async def eyebleach_subreddits(ctx):
+    """
+    List available subreddits
+    :param ctx:
+    :return:
+    """
+    try:
+        response = command.get_subreddits()
+        await ctx.send(response)
+        logger.info('Sent list of subreddits')
+    except Exception as error:
+        logger.warning('Could not get list of subreddits, error: %s', error)
+
+ 
 @commands.cooldown(rate=1, per=10, type=commands.BucketType.default)
 @bot.command(name='covid19')
 async def covid19(ctx):
@@ -195,11 +238,14 @@ async def on_ready():
     logger.info('Logged in as %s and ready to mingle!', name)
 
 
-command = BotCommands()
+try:
+    command = BotCommands()
+except Exception as error:
+    logger.critical('Failed to define command-object, reason: %s', error)
+    exit(2)
 
 try:
     bot.run(BOT_TOKEN)
-    logger.info('Started bot!')
 except Exception as error:
     logger.critical('Failed to start bot, error: %s', error)
-    exit(2)
+    exit(3)

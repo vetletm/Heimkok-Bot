@@ -1,9 +1,9 @@
 # Heimkok-Bot
 Just a simple discord-bot for personal use.
 
-To use this, acquire a bot token from discord and an API token from OpenWeatherMap.
+To use this, acquire a bot token from discord and an API token from OpenWeatherMap and a client id and secret from Reddit. The OpenWeatherMap API is to get the weather forecast, and the reddit credentials is used to bleach your eyes.
 
-Launch the bot: `./heimkok.py`, you will get a little ready message when the bot's ready to go. Make sure the bot and weather API tokens are exported as environment variables named BOT_TOKEN and WEATHER_API_TOKEN.
+Launch the bot: `./heimkok.py`, you will get a little ready message when the bot's ready to go. If any environment variables are missing, the bot will raise an exception.
 
 ## To launch as a Docker container:
 Create a Dockerfile in the same directory as all the python code with the following content:
@@ -25,6 +25,8 @@ RUN apk del .build-deps gcc musl-dev
 
 ENV BOT_TOKEN <token>
 ENV WEATHER_API_TOKEN <token>
+ENV REDDIT_CLIENT_ID <client_id>
+ENV REDDIT_CLIENT_SECRET <client_secret>
 
 CMD ["python", "heimkok.py"]
 
@@ -40,6 +42,11 @@ Launch the container:
 ```
 docker run -d heimkok-bot
 ```
+
+### Dependencies
+- Discord.py
+- requests
+- praw
 
 ## Contributing
 All new functionality should be added as a class in `commands/`, if the class uses any data from files, store this data in `commands/data/`

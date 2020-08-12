@@ -1,4 +1,5 @@
 from commands.animals import Animals
+from commands.eyebleach import Eyebleacher
 from commands.covid import Covid
 from commands.jokes import Jokes
 from commands.weather import Weather
@@ -13,6 +14,7 @@ class BotCommands:
         self.weather = Weather()
         self.animals = Animals()
         self.jokes = Jokes()
+        self.eyebleacher = Eyebleacher()
         self.covid = Covid()
 
     def get_weather(self, city):
@@ -32,5 +34,18 @@ class BotCommands:
         if joke_type == 'random':
             return self.jokes.fetch_joke_random()
 
+    def eyebleach(self, wanted_subreddit: str = ''):
+        if not wanted_subreddit:
+            return self.eyebleacher.fetch_random()
+        else:
+            return self.eyebleacher.fetch_specific(wanted_subreddit)
+
+    def get_subreddits(self):
+        return self.eyebleacher.list_subreddits()
+
+    def get_types(self):
+        return self.eyebleacher.list_types()
+    
     def get_covid(self):
         return self.covid.fetch_status()
+
