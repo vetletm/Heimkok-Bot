@@ -1,5 +1,6 @@
 from commands.animals import Animals
 from commands.eyebleach import Eyebleacher
+from commands.covid import Covid
 from commands.jokes import Jokes
 from commands.weather import Weather
 
@@ -14,6 +15,7 @@ class BotCommands:
         self.animals = Animals()
         self.jokes = Jokes()
         self.eyebleacher = Eyebleacher()
+        self.covid = Covid()
 
     def get_weather(self, city):
         return self.weather.fetch_weather(city)
@@ -43,3 +45,7 @@ class BotCommands:
 
     def get_types(self):
         return self.eyebleacher.list_types()
+    
+    def get_covid(self):
+        return self.covid.fetch_status()
+

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-import os
 import logging
+import os
 
 from discord.ext import commands
 
@@ -217,6 +217,19 @@ async def eyebleach_subreddits(ctx):
         logger.info('Sent list of subreddits')
     except Exception as error:
         logger.warning('Could not get list of subreddits, error: %s', error)
+
+ 
+@commands.cooldown(rate=1, per=10, type=commands.BucketType.default)
+@bot.command(name='covid19')
+async def covid19(ctx):
+    """ Returns current status of COVID-19 spread in Norway
+    """
+    try:
+        response = command.get_covid()
+        await ctx.send(response)
+        logger.info('Fetched and returned current COVID-19 status')
+    except Exception as error:
+        logger.warning('Could not fetch current COVID-19 status')
 
 
 @bot.event
